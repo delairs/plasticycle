@@ -17,18 +17,94 @@ const SAMPLE_ARTICLES = [
     id: 1,
     title: 'Kenapa Sampah Plastik Menjadi Masalah Besar di Indonesia?',
     excerpt:
-      'Plastik sulit terurai, menumpuk di TPA dan laut, dan masuk ke rantai makanan. Pelajari penyebab dan solusi praktis untuk rumah tangga.',
-    content: `Plastik merupakan material yang bertahan sangat lama di lingkungan. Kebiasaan konsumsi sekali pakai, infrastruktur pengelolaan sampah yang terbatas, dan kurangnya edukasi membuat plastik terus menumpuk. Pada halaman ini kita akan membahas cara memilah, mengurangi, dan memanfaatkan kembali plastik di rumah.`,
+      'Plastik sulit terurai, menumpuk di TPA dan laut, serta mencemari ekosistem laut dan darat. Pelajari akar masalah dan solusi yang bisa dilakukan di rumah.',
+    content: `
+Sampah plastik merupakan salah satu ancaman lingkungan terbesar di Indonesia. Diperkirakan lebih dari **60 juta ton sampah** dihasilkan setiap tahun, dan sekitar **17%** di antaranya adalah plastik.
+
+Masalah utama:
+- Plastik membutuhkan ratusan tahun untuk terurai.
+- Infrastruktur pengelolaan sampah masih belum merata di banyak daerah.
+- Kebiasaan masyarakat dalam menggunakan plastik sekali pakai masih tinggi.
+
+Solusi sederhana yang bisa dilakukan:
+1. Kurangi konsumsi plastik sekali pakai (kantong, sedotan, bungkus).
+2. Pisahkan sampah plastik di rumah sebelum dibuang.
+3. Serahkan plastik bersih ke bank sampah atau drop point terdekat.
+
+Dengan perubahan kecil dalam kebiasaan, kita bisa membantu mengurangi beban lingkungan dan menjaga laut tetap bersih.`
   },
   {
     id: 2,
     title: '5 Jenis Plastik yang Bisa Didaur Ulang dan Cara Mengenalinya',
     excerpt:
-      'Mengenal kode resin pada plastik membantu memilah sampah yang bisa didaur ulang. Tidak semua plastik di tempat sampah rumah bisa langsung dimanfaatkan.',
-    content:
-      'Plastik biasanya diberi kode (1-7). PET (1) dan HDPE (2) adalah yang paling mudah didaur ulang. Plastik jenis lain memerlukan proses khusus atau tidak ekonomis untuk didaur ulang.',
+      'Tidak semua plastik bisa didaur ulang. Yuk kenali simbol-simbol daur ulang agar kita bisa memilah sampah dengan benar!',
+    content: `
+Kode daur ulang plastik (resin code) biasanya ditulis pada bagian bawah wadah. Berikut penjelasannya:
+
+1. **PET atau PETE (1)** — Botol air mineral, botol minuman ringan. Mudah didaur ulang menjadi serat tekstil.
+2. **HDPE (2)** — Wadah deterjen, galon, botol susu. Kuat dan tahan panas.
+3. **PVC (3)** — Pipa, bungkus makanan. Sulit didaur ulang, hindari penggunaannya.
+4. **LDPE (4)** — Kantong plastik belanja, bungkus makanan. Bisa didaur ulang tetapi jarang.
+5. **PP (5)** — Tutup botol, wadah makanan. Aman dan bisa didaur ulang.
+6. **PS (6)** — Styrofoam, wadah sekali pakai. Tidak ramah lingkungan.
+7. **Other (7)** — Campuran plastik lain, sulit diolah.
+
+Dengan mengenali jenis plastik, kita bisa tahu mana yang layak dikumpulkan untuk didaur ulang.`
   },
+  {
+    id: 3,
+    title: 'Bagaimana Proses Daur Ulang Plastik Bekerja?',
+    excerpt:
+      'Tahapan daur ulang plastik dimulai dari pemilahan hingga menjadi produk baru. Pahami prosesnya agar kita lebih menghargai usaha daur ulang.',
+    content: `
+Proses daur ulang plastik biasanya melibatkan beberapa tahap utama:
+
+1. **Pengumpulan dan Pemilahan**  
+   Sampah plastik dikumpulkan dari rumah tangga, drop point, atau bank sampah lalu dipilah berdasarkan jenis resin dan warna.
+
+2. **Pencucian**  
+   Plastik dicuci untuk menghilangkan sisa makanan, minyak, atau label.
+
+3. **Pencacahan (Shredding)**  
+   Plastik bersih dicacah menjadi serpihan kecil (flakes).
+
+4. **Pelelehan dan Pembentukan Ulang**  
+   Flakes dilelehkan dan dibentuk menjadi butiran plastik (pellet) yang bisa digunakan industri sebagai bahan baku baru.
+
+Produk hasil daur ulang bisa berupa ember, tas, perabot rumah, bahkan serat kain daur ulang.`
+  },
+  {
+    id: 4,
+    title: 'Inovasi Startup Hijau di Indonesia yang Mengubah Sampah Jadi Cuan',
+    excerpt:
+      'Dari Octopus hingga Rekosistem, startup lokal ini membuktikan bahwa sampah bisa jadi peluang ekonomi sirkular.',
+    content: `
+Indonesia punya banyak inovator muda yang bergerak di bidang pengelolaan sampah:
+
+- **Octopus**: aplikasi jemput sampah daur ulang berbasis poin reward.  
+- **Rekosistem**: platform ekonomi sirkular untuk menghubungkan konsumen, pengepul, dan industri daur ulang.  
+- **Waste4Change**: perusahaan sosial yang mengelola sampah secara bertanggung jawab dari sumbernya.
+
+Mereka memanfaatkan **teknologi digital** untuk menciptakan rantai nilai baru di sektor lingkungan. Kamu juga bisa mulai berkontribusi dengan menggunakan aplikasi atau membuat inisiatif lokalmu sendiri!`
+  },
+  {
+    id: 5,
+    title: 'Langkah Kecil di Rumah untuk Dunia yang Lebih Bersih',
+    excerpt:
+      'Mulailah dari hal sederhana: bawa tas belanja sendiri, hindari sedotan plastik, dan ajak tetangga ikut serta.',
+    content: `
+Tidak perlu menunggu kebijakan besar untuk mulai beraksi. Beberapa langkah sederhana ini bisa kamu lakukan sekarang:
+
+- Gunakan botol minum dan kotak makan yang bisa dipakai ulang.
+- Simpan kantong belanja kain di tas atau kendaraan.
+- Pisahkan sampah organik dan anorganik di rumah.
+- Cuci dan keringkan plastik sebelum disetorkan ke bank sampah.
+- Edukasi anak-anak sejak dini tentang pentingnya menjaga lingkungan.
+
+Gerakan kecil dari rumah akan menjadi gelombang besar jika dilakukan bersama.`
+  }
 ];
+
 
 const SAMPLE_TIPS = [
   'Bawa tas belanja sendiri setiap kali pergi ke toko.',
