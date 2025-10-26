@@ -229,7 +229,7 @@ export default function PlastiCycleApp() {
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <img
-                src="src\public\logo.png"
+                src="/logo.png"
                 alt="Logo PlastiCycle"
                 className="w-20 h-20 rounded-lg object-cover"
             />
