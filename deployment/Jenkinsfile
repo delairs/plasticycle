@@ -20,7 +20,7 @@ pipeline {
         // cobaCluster = credentials('cobaCluster')
     }
 
-    tools {nodejs ""}
+    tools {nodejs "node22"}
 
     stages{
         stage('Clone Repository') {
