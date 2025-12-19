@@ -16,4 +16,4 @@ spec:
       - name: plasticycle
         image: delairs/plasticycle:latest
         ports:
-        - containerPort: 80
+        - containerPort: 5173

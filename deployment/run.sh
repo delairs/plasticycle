@@ -1,3 +1,3 @@
 #!/bin/bash
 npm run build
-npm start
+npm run dev -- --host 0.0.0.0 --port 5173
