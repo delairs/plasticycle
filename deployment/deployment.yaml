@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: plasticycle
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: plasticycle
+  template:
+    metadata:
+      labels:
+        app: plasticycle
+    spec:
+      containers:
+      - name: plasticycle
+        image: delairs/plasticycle:latest
+        ports:
+        - containerPort: 80

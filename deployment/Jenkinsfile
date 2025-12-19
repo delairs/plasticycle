@@ -1,0 +1,119 @@
+pipeline {
+
+    agent any
+
+    // agent {
+    //     docker {
+    //         image 'docker:24.0.7-dind' // atau versi yang stabil
+    //         args '-v /var/run/docker.sock:/var/run/docker.sock'
+    //     }
+    // }
+
+    environment {
+        gitUrl = 'https://github.com/delairs/plasticycle.git'
+        gitBranch = 'main'
+        appsName = 'plasticycle'
+        registry = "delairs/$appsName"
+        dockerCred = credentials('dockerCred')
+        clusterProd = credentials('clusterProd')
+        snykToken = credentials('snykToken')
+        // cobaCluster = credentials('cobaCluster')
+    }
+
+    tools {nodejs ""}
+
+    stages{
+        stage('Clone Repository') {
+            steps {
+                
+                // Perintah 'git' akan meng-clone repository
+                // ke dalam workspace Jenkins
+                git url: gitUrl, branch: gitBranch
+                
+                echo "Clone selesai."
+                
+                // Opsional: verifikasi isi folder
+                sh 'ls -la'
+                sh 'cp -rf ./deployment/* .'
+            }
+        }
+
+        stage('Compiling Codes') {
+            steps {
+                dir('sourcecode'){
+                    sh 'npm ci'
+                    sh 'npm install'
+                }
+            }
+        }
+
+        stage('Snyk - Dependency Scan (Plugin)') {
+          steps {
+            snykSecurity(
+              snykInstallation: 'Snyk',
+              snykTokenId: 'snykToken',      // ini ID credential token Snyk di Jenkins
+              severity: 'high',
+              targetFile: 'package.json',    // bisa juga arahkan ke folder/manifest yang kamu mau
+              projectName: 'pokedex-vue'
+            )
+          }
+        }
+        
+        stage('Build Docker Image') {
+            steps {
+                echo "Mulai membuat Docker image..."
+                // Tag image dengan username Docker Hub-mu
+                // Contoh: sh 'docker build -t johndoe/pokedex-app:latest .'
+                sh "docker build -t ${registry}:${BUILD_NUMBER} ."
+            }
+        }
+
+        // stage('Push to Docker Hub') {
+        //     steps {
+        //         script {
+        //             sh """
+        //                 docker push ${registry}:${BUILD_NUMBER}
+        //             """
+        //         }
+        //     }
+        // }
+
+        stage('Push to Docker Hub') {
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'dockerCred', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                        sh """
+                            echo ${DOCKER_PASS} | docker login -u ${DOCKER_USER} --password-stdin
+                            docker push ${registry}:${BUILD_NUMBER}
+                        """
+                    }
+                }
+            }
+        }
+
+        stage('Deploy to Kubernetes') {
+            steps {
+                script {
+                    sh "sed -i 's/latest/$env.BUILD_NUMBER/g' deployment.yaml"
+                    sh "kubectl --kubeconfig=$clusterProd apply --validate=false -f deployment.yaml -n prod"
+                    sh "kubectl --kubeconfig=$clusterProd rollout status deployment plasticycle -n prod --timeout=300s"
+                }
+            }
+        }
+    }
+    post {
+        always {
+            deleteDir()
+        }
+        success {
+            echo "Release Success"
+        }
+        failure {
+            echo "Release Failed"
+        }
+        cleanup {
+            echo "Clean up in post work space"
+            cleanWs()
+        }
+    }
+}
