@@ -40,10 +40,8 @@ pipeline {
 
         stage('Compiling Codes') {
             steps {
-                dir('sourcecode'){
-                    sh 'npm ci'
-                    sh 'npm install'
-                }
+                sh 'npm ci'
+                sh 'npm install'
             }
         }
 
@@ -54,7 +52,7 @@ pipeline {
               snykTokenId: 'snykToken',      // ini ID credential token Snyk di Jenkins
               severity: 'high',
               targetFile: 'package.json',    // bisa juga arahkan ke folder/manifest yang kamu mau
-              projectName: 'pokedex-vue'
+              projectName: 'plasticycle'
             )
           }
         }
