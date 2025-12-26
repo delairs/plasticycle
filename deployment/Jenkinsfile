@@ -45,32 +45,28 @@ pipeline {
             }
         }
 
-        // stage('Snyk - Dependency Scan (Plugin)') {
-        //   steps {
-        //     withCredentials([string(credentialsId: 'snykToken', variable: 'SNYK_TOKEN')]) {
-        //       sh 'echo "SNYK_TOKEN is set"'
-        //     }
-
-        //     // snykSecurity(
-        //     //   snykInstallation: 'Snyk',
-        //     //   snykTokenId: 'snykToken',      // ini ID credential token Snyk di Jenkins
-        //     //   severity: 'high',
-        //     //   targetFile: 'package.json',    // bisa juga arahkan ke folder/manifest yang kamu mau
-        //     //   projectName: 'plasticycle'
-        //     // )
-        //   }
-        // }
-        
-        stage('Snyk Scan') {
+        stage('Snyk - Dependency Scan (Plugin)') {
           steps {
-            withCredentials([string(credentialsId: 'snykToken', variable: 'SNYK_TOKEN')]) {
-              sh '''
-                snyk auth "$SNYK_TOKEN"
-                snyk test --all-projects
-              '''
-            }
+            snykSecurity(
+              snykInstallation: 'Snyk',
+              snykTokenId: 'snykToken',      // ini ID credential token Snyk di Jenkins
+              severity: 'high',
+              targetFile: 'package.json',    // bisa juga arahkan ke folder/manifest yang kamu mau
+              projectName: 'plasticycle'
+            )
           }
         }
+        
+        // stage('Snyk Scan') {
+        //   steps {
+        //     withCredentials([string(credentialsId: 'snykToken', variable: 'SNYK_TOKEN')]) {
+        //       sh '''
+        //         snyk auth "$SNYK_TOKEN"
+        //         snyk test --all-projects
+        //       '''
+        //     }
+        //   }
+        // }
 
 
         stage('Build Docker Image') {
