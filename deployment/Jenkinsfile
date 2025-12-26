@@ -16,7 +16,7 @@ pipeline {
         registry = "delairs/$appsName"
         dockerCred = credentials('dockerCred')
         kubeConfig = credentials('kubeConfig')
-        snykToken = credentials('snykToken')
+        // snykToken = credentials('snykToken')
         // cobaCluster = credentials('cobaCluster')
     }
 
