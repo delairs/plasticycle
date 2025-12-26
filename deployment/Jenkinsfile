@@ -15,8 +15,8 @@ pipeline {
         appsName = 'plasticycle'
         registry = "delairs/$appsName"
         dockerCred = credentials('dockerCred')
-        clusterProd = credentials('clusterProd')
-        // snykToken = credentials('snykToken')
+        kubeConfig = credentials('kubeConfig')
+        snykToken = credentials('snykToken')
         // cobaCluster = credentials('cobaCluster')
     }
 
@@ -93,8 +93,8 @@ pipeline {
             steps {
                 script {
                     sh "sed -i 's/latest/$env.BUILD_NUMBER/g' deployment.yaml"
-                    sh "kubectl --kubeconfig=$clusterProd apply --validate=false -f deployment.yaml -n prod"
-                    sh "kubectl --kubeconfig=$clusterProd rollout status deployment plasticycle -n prod --timeout=300s"
+                    sh "kubectl --kubeconfig=$kubeConfig apply --validate=false -f deployment.yaml -n prod"
+                    sh "kubectl --kubeconfig=$kubeConfig rollout status deployment plasticycle -n prod --timeout=300s"
                 }
             }
         }
