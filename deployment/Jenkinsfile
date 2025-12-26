@@ -16,8 +16,6 @@ pipeline {
         registry = "delairs/$appsName"
         dockerCred = credentials('dockerCred')
         kubeConfig = credentials('kubeConfig')
-        // snykToken = credentials('snykToken')
-        // cobaCluster = credentials('cobaCluster')
     }
 
     tools {nodejs "node22"}
@@ -56,18 +54,6 @@ pipeline {
                 )
             }
         }
-        
-        // stage('Snyk Scan') {
-        //   steps {
-        //     withCredentials([string(credentialsId: 'snykToken', variable: 'SNYK_TOKEN')]) {
-        //       sh '''
-        //         snyk auth "$SNYK_TOKEN"
-        //         snyk test --all-projects
-        //       '''
-        //     }
-        //   }
-        // }
-
 
         stage('Build Docker Image') {
             steps {
@@ -101,15 +87,15 @@ pipeline {
             }
         }
 
-        // stage('Deploy to Kubernetes') {
-        //     steps {
-        //         script {
-        //             sh "sed -i 's/latest/$env.BUILD_NUMBER/g' deployment.yaml"
-        //             sh "kubectl --kubeconfig=$kubeConfig apply --validate=false -f deployment.yaml -n prod"
-        //             sh "kubectl --kubeconfig=$kubeConfig rollout status deployment plasticycle -n prod --timeout=300s"
-        //         }
-        //     }
-        // }
+        stage('Deploy to Kubernetes') {
+            steps {
+                script {
+                    sh "sed -i 's/latest/$env.BUILD_NUMBER/g' deployment.yaml"
+                    sh "kubectl --kubeconfig=$kubeConfig apply --validate=false -f deployment.yaml -n prod"
+                    sh "kubectl --kubeconfig=$kubeConfig rollout status deployment plasticycle -n prod --timeout=300s"
+                }
+            }
+        }
     }
     post {
         always {
