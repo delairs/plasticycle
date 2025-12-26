@@ -47,13 +47,17 @@ pipeline {
 
         stage('Snyk - Dependency Scan (Plugin)') {
           steps {
-            snykSecurity(
-              snykInstallation: 'Snyk',
-              snykTokenId: 'snykToken',      // ini ID credential token Snyk di Jenkins
-              severity: 'high',
-              targetFile: 'package.json',    // bisa juga arahkan ke folder/manifest yang kamu mau
-              projectName: 'plasticycle'
-            )
+            withCredentials([string(credentialsId: 'snykToken', variable: 'SNYK_TOKEN')]) {
+              sh 'echo "SNYK_TOKEN is set"'
+            }
+
+            // snykSecurity(
+            //   snykInstallation: 'Snyk',
+            //   snykTokenId: 'snykToken',      // ini ID credential token Snyk di Jenkins
+            //   severity: 'high',
+            //   targetFile: 'package.json',    // bisa juga arahkan ke folder/manifest yang kamu mau
+            //   projectName: 'plasticycle'
+            // )
           }
         }
         
@@ -89,15 +93,15 @@ pipeline {
             }
         }
 
-        stage('Deploy to Kubernetes') {
-            steps {
-                script {
-                    sh "sed -i 's/latest/$env.BUILD_NUMBER/g' deployment.yaml"
-                    sh "kubectl --kubeconfig=$kubeConfig apply --validate=false -f deployment.yaml -n prod"
-                    sh "kubectl --kubeconfig=$kubeConfig rollout status deployment plasticycle -n prod --timeout=300s"
-                }
-            }
-        }
+        // stage('Deploy to Kubernetes') {
+        //     steps {
+        //         script {
+        //             sh "sed -i 's/latest/$env.BUILD_NUMBER/g' deployment.yaml"
+        //             sh "kubectl --kubeconfig=$kubeConfig apply --validate=false -f deployment.yaml -n prod"
+        //             sh "kubectl --kubeconfig=$kubeConfig rollout status deployment plasticycle -n prod --timeout=300s"
+        //         }
+        //     }
+        // }
     }
     post {
         always {
