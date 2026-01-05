@@ -43,17 +43,45 @@ pipeline {
             }
         }
 
-        stage('Snyk - Dependency Scan (Plugin)') {
-            steps {
-                snykSecurity(
-                    snykInstallation: 'Snyk',
-                    snykTokenId: 'snykToken',      // ini ID credential token Snyk di Jenkins
-                    severity: 'low',
-                    targetFile: 'package.json',    // bisa juga arahkan ke folder/manifest yang kamu mau
-                    projectName: 'plasticycle'
-                )
-            }
+        // stage('Snyk - Dependency Scan (Plugin)') {
+        //     steps {
+        //         snykSecurity(
+        //             snykInstallation: 'Snyk',
+        //             snykTokenId: 'snykToken',      // ini ID credential token Snyk di Jenkins
+        //             severity: 'low',
+        //             targetFile: 'package.json',    // bisa juga arahkan ke folder/manifest yang kamu mau
+        //             projectName: 'plasticycle'
+        //         )
+        //     }
+        // }
+
+        stage('Debug deps') {
+          steps {
+            sh '''
+              pwd
+              ls -la
+              test -f package.json && echo "package.json OK"
+              test -f package-lock.json && echo "package-lock OK"
+              node -v
+              npm -v
+              npm ls --depth=0 || true
+            '''
+          }
         }
+        
+
+        stage('Snyk - Dependency Scan (Plugin)') {
+          steps {
+            snykSecurity(
+              snykInstallation: 'Snyk',
+              snykTokenId: 'snykToken',
+              severity: 'low',
+              targetFile: 'package-lock.json',
+              projectName: 'plasticycle'
+            )
+          }
+        }
+       
 
         stage('SonarQube - Code Analysis') {
             steps {
