@@ -48,7 +48,7 @@ pipeline {
                 snykSecurity(
                     snykInstallation: 'Snyk',
                     snykTokenId: 'snykToken',      // ini ID credential token Snyk di Jenkins
-                    severity: 'high',
+                    severity: 'low',
                     targetFile: 'package.json',    // bisa juga arahkan ke folder/manifest yang kamu mau
                     projectName: 'plasticycle'
                 )
