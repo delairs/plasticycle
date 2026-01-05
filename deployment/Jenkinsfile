@@ -57,7 +57,7 @@ pipeline {
 
         stage('SonarQube - Code Analysis') {
             steps {
-              withSonarQubeEnv('sonarToken') {
+              withSonarQubeEnv('sonarqube') {
                 sh """
                   sonar-scanner \
                     -Dsonar.projectKey=${appsName} \
