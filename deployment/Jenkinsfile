@@ -55,6 +55,28 @@ pipeline {
             }
         }
 
+        stage('SonarQube - Code Analysis') {
+            steps {
+              withSonarQubeEnv('sonarToken') {
+                sh """
+                  sonar-scanner \
+                    -Dsonar.projectKey=${appsName} \
+                    -Dsonar.projectName=${appsName} \
+                    -Dsonar.sources=. \
+                    -Dsonar.exclusions=**/node_modules/**,**/dist/**,**/build/**,**/coverage/**
+                """
+              }
+            }
+        }
+
+        stage('SonarQube - Quality Gate') {
+          steps {
+            timeout(time: 5, unit: 'MINUTES') {
+              waitForQualityGate abortPipeline: true
+            }
+          }
+        }    
+
         stage('Build Docker Image') {
             steps {
                 echo "Mulai membuat Docker image..."
