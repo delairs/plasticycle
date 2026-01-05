@@ -58,16 +58,20 @@ pipeline {
         stage('SonarQube - Code Analysis') {
             steps {
               withSonarQubeEnv('sonarqube') {
-                sh """
-                  sonar-scanner \
-                    -Dsonar.projectKey=${appsName} \
-                    -Dsonar.projectName=${appsName} \
-                    -Dsonar.sources=. \
-                    -Dsonar.exclusions=**/node_modules/**,**/dist/**,**/build/**,**/coverage/**
-                """
+                script {
+                  def scannerHome = tool 'sonar-scanner'
+                  sh """
+                    ${scannerHome}/bin/sonar-scanner \
+                      -Dsonar.projectKey=${appsName} \
+                      -Dsonar.projectName=${appsName} \
+                      -Dsonar.sources=. \
+                      -Dsonar.exclusions=**/node_modules/**,**/dist/**,**/build/**,**/coverage/**
+                  """
+                }
               }
             }
         }
+
 
         stage('SonarQube - Quality Gate') {
           steps {
