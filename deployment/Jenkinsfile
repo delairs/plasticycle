@@ -81,7 +81,7 @@ pipeline {
 
         stage('Debug Snyk Deps (grep)') {
           steps {
-            withCredentials([string(credentialsId: 'snykToken', variable: 'SNYK_TOKEN')]) {
+            withCredentials([string(credentialsId: 'snykToken1', variable: 'SNYK_TOKEN')]) {
               sh '''
                 /var/jenkins_home/tools/io.snyk.jenkins.tools.SnykInstallation/Snyk/snyk-linux auth $SNYK_TOKEN
                 /var/jenkins_home/tools/io.snyk.jenkins.tools.SnykInstallation/Snyk/snyk-linux test \
