@@ -104,21 +104,51 @@ pipeline {
         //   }
         // }
 
+        // stage('Snyk - Full Dependency Scan') {
+        //   steps {
+        //     snykSecurity(
+        //       snykInstallation: 'Snyk',
+        //       snykTokenId: 'snykToken',
+        //       severity: 'low',                 // ini jadi --severity-threshold
+        //       targetFile: 'package-lock.json',
+        //       projectName: 'plasticycle',
+        //       additionalArguments: '''
+        //         --dev
+        //         --strict-out-of-sync=true
+        //         --show-vulnerable-paths=all
+        //         --policy-path=.snyk
+        //       '''.trim()
+        //     )
+        //   }
+        // }
+
         stage('Snyk - Full Dependency Scan') {
           steps {
-            snykSecurity(
-              snykInstallation: 'Snyk',
-              snykTokenId: 'snykToken',
-              severity: 'low',                 // ini jadi --severity-threshold
-              targetFile: 'package-lock.json',
-              projectName: 'plasticycle',
-              additionalArguments: '''
-                --dev
-                --strict-out-of-sync=true
-                --show-vulnerable-paths=all
-                --policy-path=.snyk
-              '''.trim()
-            )
+            script {
+              try {
+                snykSecurity(
+                  snykInstallation: 'Snyk',
+                  snykTokenId: 'snykToken',
+                  severity: 'low',
+                  targetFile: 'package-lock.json',
+                  projectName: 'plasticycle',
+                  additionalArguments: '''
+                    --dev
+                    --strict-out-of-sync=true
+                    --show-vulnerable-paths=all
+                    --policy-path=.snyk
+                  '''.trim()
+                )
+
+                env.stageResultsnyk = 'true'
+              } catch (Exception e) {
+                unstable("${STAGE_NAME} failed!")
+                env.stageResultsnyk = 'false'
+
+                // optional: biar lognya jelas
+                echo "Snyk failed: ${err}"
+              }
+            }
           }
         }
 
