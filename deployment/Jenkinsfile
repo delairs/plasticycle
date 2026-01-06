@@ -55,55 +55,74 @@ pipeline {
         //     }
         // }
 
-        stage('Debug deps') {
-          steps {
-            sh '''
-              pwd
-              ls -la
-              test -f package.json && echo "package.json OK"
-              test -f package-lock.json && echo "package-lock OK"
-              node -v
-              npm -v
-              npm ls --depth=0 || true
-            '''
-          }
-        }
+        // stage('Debug deps') {
+        //   steps {
+        //     sh '''
+        //       pwd
+        //       ls -la
+        //       test -f package.json && echo "package.json OK"
+        //       test -f package-lock.json && echo "package-lock OK"
+        //       node -v
+        //       npm -v
+        //       npm ls --depth=0 || true
+        //     '''
+        //   }
+        // }
 
-        stage('Debug Snyk Deps (print-deps)') {
-          steps {
-            sh '''
-              /var/jenkins_home/tools/io.snyk.jenkins.tools.SnykInstallation/Snyk/snyk-linux test \
-                --file=package-lock.json \
-                --print-deps | head -n 80
-            '''
-          }
-        }
+        // stage('Debug Snyk Deps (print-deps)') {
+        //   steps {
+        //     sh '''
+        //       /var/jenkins_home/tools/io.snyk.jenkins.tools.SnykInstallation/Snyk/snyk-linux test \
+        //         --file=package-lock.json \
+        //         --print-deps | head -n 80
+        //     '''
+        //   }
+        // }
 
-        stage('Debug Snyk Deps (grep)') {
-          steps {
-            withCredentials([string(credentialsId: 'snykToken1', variable: 'SNYK_TOKEN')]) {
-              sh '''
-                /var/jenkins_home/tools/io.snyk.jenkins.tools.SnykInstallation/Snyk/snyk-linux auth $SNYK_TOKEN
-                /var/jenkins_home/tools/io.snyk.jenkins.tools.SnykInstallation/Snyk/snyk-linux test \
-                  --file=package-lock.json --dev --print-deps \
-                | grep -Ei "lodash|serialize-javascript|minimist" | head -n 50
-              '''
-            }
-          }
-        }
+        // stage('Debug Snyk Deps (grep)') {
+        //   steps {
+        //     withCredentials([string(credentialsId: 'snykToken1', variable: 'SNYK_TOKEN')]) {
+        //       sh '''
+        //         /var/jenkins_home/tools/io.snyk.jenkins.tools.SnykInstallation/Snyk/snyk-linux auth $SNYK_TOKEN
+        //         /var/jenkins_home/tools/io.snyk.jenkins.tools.SnykInstallation/Snyk/snyk-linux test \
+        //           --file=package-lock.json --dev --print-deps \
+        //         | grep -Ei "lodash|serialize-javascript|minimist" | head -n 50
+        //       '''
+        //     }
+        //   }
+        // }
 
-        stage('Snyk - Dependency Scan (Plugin)') {
+        // stage('Snyk - Dependency Scan (Plugin)') {
+        //   steps {
+        //     snykSecurity(
+        //       snykInstallation: 'Snyk',
+        //       snykTokenId: 'snykToken',
+        //       severity: 'low',
+        //       targetFile: 'package-lock.json',
+        //       projectName: 'plasticycle'
+        //     )
+        //   }
+        // }
+
+        stage('Snyk - Full Dependency Scan') {
           steps {
             snykSecurity(
               snykInstallation: 'Snyk',
               snykTokenId: 'snykToken',
-              severity: 'low',
+              severity: 'low',                 // ini jadi --severity-threshold
               targetFile: 'package-lock.json',
-              projectName: 'plasticycle'
+              projectName: 'plasticycle',
+              additionalArguments: '''
+                --dev
+                --strict-out-of-sync=true
+                --show-vulnerable-paths=all
+                --policy-path=.snyk
+                --json-file-output=snyk-result.json
+                --sarif-file-output=snyk-result.sarif
+              '''.trim()
             )
           }
         }
-       
 
         stage('SonarQube - Code Analysis') {
             steps {
