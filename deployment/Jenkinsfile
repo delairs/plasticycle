@@ -117,8 +117,6 @@ pipeline {
                 --strict-out-of-sync=true
                 --show-vulnerable-paths=all
                 --policy-path=.snyk
-                --json-file-output=snyk-result.json
-                --sarif-file-output=snyk-result.sarif
               '''.trim()
             )
           }
