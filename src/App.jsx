@@ -410,7 +410,7 @@ export default function PlastiCycleApp() {
 
           <div className="bg-white p-6 rounded-lg shadow">
             <h3 className="text-2xl font-semibold">Kontak & Kolaborasi</h3>
-            <p className="mt-2 text-gray-600">Mau kolaborasi atau ada saran? Isi form atau kirim email ke <strong>plastycle@example.com</strong> (ganti dengan emailmu sendiri).</p>
+            <p className="mt-2 text-gray-600">Mau kolaborasi atau ada saran? Isi form atau kirim email ke <strong>plasticycle@example.com</strong> (ganti dengan emailmu sendiri).</p>
 
             <form className="mt-4 grid gap-3">
               <input className="px-3 py-2 border rounded" placeholder="Nama" />
