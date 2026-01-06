@@ -68,7 +68,16 @@ pipeline {
             '''
           }
         }
-        
+
+        stage('Debug Snyk Deps (print-deps)') {
+          steps {
+            sh '''
+              /var/jenkins_home/tools/io.snyk.jenkins.tools.SnykInstallation/Snyk/snyk-linux test \
+                --file=package-lock.json \
+                --print-deps | head -n 80
+            '''
+          }
+        }
 
         stage('Snyk - Dependency Scan (Plugin)') {
           steps {
