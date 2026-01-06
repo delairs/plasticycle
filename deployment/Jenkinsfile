@@ -144,9 +144,6 @@ pipeline {
               } catch (Exception e) {
                 unstable("${STAGE_NAME} failed!")
                 env.stageResultsnyk = 'false'
-
-                // optional: biar lognya jelas
-                echo "Snyk failed: ${err}"
               }
             }
           }
@@ -211,6 +208,11 @@ pipeline {
         }
 
         stage('Deploy to Kubernetes') {
+            when {
+                expression {
+                    env.stageResultsnyk == 'true'
+                }
+            }
             steps {
                 script {
                     sh "sed -i 's/latest/$env.BUILD_NUMBER/g' deployment.yaml"
