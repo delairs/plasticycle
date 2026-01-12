@@ -208,11 +208,11 @@ pipeline {
         }
 
         stage('Deploy to Kubernetes') {
-            when {
-                expression {
-                    env.stageResultsnyk == 'true'
-                }
-            }
+            // when {
+            //     expression {
+            //         env.stageResultsnyk == 'true'
+            //     }
+            // }
             steps {
                 script {
                     sh "sed -i 's/latest/$env.BUILD_NUMBER/g' deployment.yaml"
