@@ -1,26 +1,33 @@
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 const DropPointMap = () => {
   const [dropPoints, setDropPoints] = useState([]);
 
+  // Ambil dari .env (Vite wajib prefix VITE_)
+  const BASE_URL =
+    import.meta.env.VITE_OPENLITTERMAP_BASE_URL;
+  const COUNTRY_CODE = import.meta.env.VITE_COUNTRY_CODE;
+
   useEffect(() => {
     const fetchDropPoints = async () => {
       try {
-        // Fetch data dari OpenLitterMap (khusus Indonesia)
-        const response = await axios.get('https://api.openlittermap.com/api/v0.1/litter-data?country_code=ID');
+        const url = `${BASE_URL}/litter-data?country_code=${encodeURIComponent(COUNTRY_CODE)}`;
+        const response = await axios.get(url);
 
-        // Ambil data yang punya koordinat valid
         const features = response.data?.features || [];
-        const points = features.map((f, i) => ({
-          id: i,
-          name: f.properties?.category || 'Litter Point',
-          lat: f.geometry?.coordinates?.[1],
-          lng: f.geometry?.coordinates?.[0],
-          desc: f.properties?.material || 'Data dari OpenLitterMap',
-        })).filter(p => p.lat && p.lng);
+        const points = features
+          .map((f, i) => ({
+            id: i,
+            name: f.properties?.category || 'Litter Point',
+            lat: f.geometry?.coordinates?.[1],
+            lng: f.geometry?.coordinates?.[0],
+            desc: f.properties?.material || 'Data dari OpenLitterMap',
+          }))
+          // penting: jangan pakai `p.lat && p.lng` karena 0 dianggap false
+          .filter((p) => Number.isFinite(p.lat) && Number.isFinite(p.lng));
 
         setDropPoints(points);
       } catch (err) {
@@ -29,13 +36,18 @@ const DropPointMap = () => {
     };
 
     fetchDropPoints();
-  }, []);
+  }, [BASE_URL, COUNTRY_CODE]);
 
-  const markerIcon = new L.Icon({
-    iconUrl: 'https://cdn-icons-png.flaticon.com/512/684/684908.png',
-    iconSize: [32, 32],
-    iconAnchor: [16, 32],
-  });
+  // Supaya icon gak dibuat ulang tiap render
+  const markerIcon = useMemo(
+    () =>
+      new L.Icon({
+        iconUrl: 'https://cdn-icons-png.flaticon.com/512/684/684908.png',
+        iconSize: [32, 32],
+        iconAnchor: [16, 32],
+      }),
+    []
+  );
 
   return (
     <div className="w-full h-[400px] rounded-2xl overflow-hidden shadow-lg">
