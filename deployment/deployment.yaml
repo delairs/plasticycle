@@ -12,8 +12,8 @@ spec:
       labels:
         app: plasticycle
     spec:
-      containers:
       serviceAccountName: vault-auth
+      containers:
       - name: plasticycle
         image: delairs/plasticycle:latest
         ports:
