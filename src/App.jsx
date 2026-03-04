@@ -218,13 +218,6 @@ export default function PlastiCycleApp() {
   const [query, setQuery] = useState('');
   const [selectedArticle, setSelectedArticle] = useState(null);
 
-  // ENV dari Vault
-  const BASE_URL = import.meta.env.VITE_OPENLITTERMAP_BASE_URL;
-  const COUNTRY_CODE = import.meta.env.VITE_COUNTRY_CODE;
-  // ini juga
-  console.log("Vault BASE_URL:", BASE_URL);
-  console.log("Vault COUNTRY_CODE:", COUNTRY_CODE);
-
   const filtered = SAMPLE_ARTICLES.filter(
     (a) => a.title.toLowerCase().includes(query.toLowerCase()) || a.excerpt.toLowerCase().includes(query.toLowerCase())
   );
@@ -269,12 +262,6 @@ export default function PlastiCycleApp() {
         {/* Hero */}
         <section id="home" className="grid md:grid-cols-2 gap-8 items-center">
           <div>
-            <div className="min-h-screen">
-              <div className="p-4 bg-yellow-100 rounded">
-                <p>Base URL: {BASE_URL}</p>
-                <p>Country Code: {COUNTRY_CODE}</p>
-              </div>
-            </div>
             <h2 className="text-3xl md:text-4xl font-extrabold leading-tight">Kurangi Plastik, Selamatkan Laut & Kota Kita</h2>
             <p className="mt-4 text-gray-700">PlastiCycle membantu kamu belajar memilah sampah, menemukan titik drop-off daur ulang, dan ikut kampanye lokal. Semua dibuat menggunakan teknologi open-source dan mobile-first.</p>
 
