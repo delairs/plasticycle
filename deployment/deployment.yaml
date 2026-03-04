@@ -13,6 +13,7 @@ spec:
         app: plasticycle
       annotations:
         vault.hashicorp.com/agent-inject: "true"
+        vault.hashicorp.com/agent-inject-token: "true"
         vault.hashicorp.com/role: "prod"
         vault.hashicorp.com/auth-path: "auth/kubernetes-cluster-demo"
 
@@ -24,7 +25,7 @@ spec:
             vault_agent_token_file = "/vault/secrets/token"
             renew_token = true
           }
-          
+
           secret {
             path = "kv/data/secret/prod/PLASTICYCLE"
             format = "env"
