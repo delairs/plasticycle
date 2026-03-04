@@ -1,12 +1,23 @@
-FROM node:22-alpine
+FROM node:20-alpine
 
-WORKDIR /home/node/app
-
-COPY . /home/node/app/
-
+WORKDIR /app
+COPY package*.json ./
 RUN npm install
 
-RUN chown -R node:node /home/node/app
-USER node
+COPY . .
 
-CMD ["sh", "run.sh"]
+# install curl + unzip
+RUN apk add --no-cache curl unzip
+
+# install envconsul (amd64)
+RUN curl -fsSL -o /tmp/envconsul.zip \
+    https://releases.hashicorp.com/envconsul/0.13.4/envconsul_0.13.4_linux_amd64.zip \
+ && unzip /tmp/envconsul.zip -d /usr/local/bin \
+ && chmod +x /usr/local/bin/envconsul \
+ && rm -f /tmp/envconsul.zip
+
+COPY run.sh /app/run.sh
+RUN chmod +x /app/run.sh
+
+EXPOSE 5173
+CMD ["/app/run.sh"]

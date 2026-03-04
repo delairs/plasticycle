@@ -11,10 +11,27 @@ spec:
     metadata:
       labels:
         app: plasticycle
+      annotations:
+        vault.hashicorp.com/agent-inject: "true"
+        vault.hashicorp.com/role: "prod"
+        vault.hashicorp.com/auth-path: "auth/kubernetes-cluster-demo"
+      
+        # Inject file envconsul.hcl
+        vault.hashicorp.com/agent-inject-secret-envconsul.hcl: "kv/secret/prod/PLASTICYCLE"
+        vault.hashicorp.com/agent-inject-template-envconsul.hcl: |
+          vault {
+            address = "http://vault.vault.svc:8200"
+            renew_token = true
+          }
+      
+          secret {
+            path = "kv/data/secret/prod/PLASTICYCLE"
+            format = "env"
+          }
     spec:
       serviceAccountName: vault-auth
       containers:
-      - name: plasticycle
-        image: delairs/plasticycle:latest
-        ports:
-        - containerPort: 5173
+        - name: plasticycle
+          image: delairs/plasticycle:latest
+          ports:
+            - containerPort: 5173
