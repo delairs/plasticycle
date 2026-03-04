@@ -226,8 +226,17 @@ export default function PlastiCycleApp() {
   const COUNTRY_CODE = process.env.VITE_COUNTRY_CODE;
   console.log("ENV DEBUG:", process.env);
 
+  const VAULT_FLAG = import.meta.env.VITE_DEMO_FLAG;
+
+  console.log("Vault flag:", VAULT_FLAG);
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-green-50 to-white text-gray-800">
+      <div className="bg-yellow-200 p-3">
+        <h2>Vault Test</h2>
+        <p>{VAULT_FLAG}</p>
+      </div>
+
       <div className="p-4 bg-yellow-100 rounded mb-4">
         <h3 className="font-semibold">Vault Env Debug</h3>
         <p>Base URL: {BASE_URL || "NOT FOUND"}</p>
