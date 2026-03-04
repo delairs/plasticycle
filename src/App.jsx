@@ -222,8 +222,17 @@ export default function PlastiCycleApp() {
     (a) => a.title.toLowerCase().includes(query.toLowerCase()) || a.excerpt.toLowerCase().includes(query.toLowerCase())
   );
 
+  const BASE_URL = import.meta.env.VITE_OPENLITTERMAP_BASE_URL;
+  const COUNTRY_CODE = import.meta.env.VITE_COUNTRY_CODE;
+  console.log("ENV DEBUG:", import.meta.env);
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-green-50 to-white text-gray-800">
+      <div className="p-4 bg-yellow-100 rounded mb-4">
+        <h3 className="font-semibold">Vault Env Debug</h3>
+        <p>Base URL: {BASE_URL || "NOT FOUND"}</p>
+        <p>Country Code: {COUNTRY_CODE || "NOT FOUND"}</p>
+      </div>
       {/* Header */}
       <header className="bg-white/80 backdrop-blur sticky top-0 z-40 shadow-sm">
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
