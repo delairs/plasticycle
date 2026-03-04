@@ -222,9 +222,9 @@ export default function PlastiCycleApp() {
     (a) => a.title.toLowerCase().includes(query.toLowerCase()) || a.excerpt.toLowerCase().includes(query.toLowerCase())
   );
 
-  const BASE_URL = import.meta.env.VITE_OPENLITTERMAP_BASE_URL;
-  const COUNTRY_CODE = import.meta.env.VITE_COUNTRY_CODE;
-  console.log("ENV DEBUG:", import.meta.env);
+  const BASE_URL = process.env.VITE_OPENLITTERMAP_BASE_URL;
+  const COUNTRY_CODE = process.env.VITE_COUNTRY_CODE;
+  console.log("ENV DEBUG:", process.env);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-green-50 to-white text-gray-800">

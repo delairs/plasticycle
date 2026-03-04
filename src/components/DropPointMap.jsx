@@ -7,9 +7,8 @@ const DropPointMap = () => {
   const [dropPoints, setDropPoints] = useState([]);
 
   // Ambil dari .env (Vite wajib prefix VITE_)
-  const BASE_URL =
-    import.meta.env.VITE_OPENLITTERMAP_BASE_URL;
-  const COUNTRY_CODE = import.meta.env.VITE_COUNTRY_CODE;
+  const BASE_URL = process.env.VITE_OPENLITTERMAP_BASE_URL;
+  const COUNTRY_CODE = process.env.VITE_COUNTRY_CODE;
 
   useEffect(() => {
     const fetchDropPoints = async () => {
