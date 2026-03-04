@@ -21,9 +21,10 @@ spec:
         vault.hashicorp.com/agent-inject-template-envconsul.hcl: |
           vault {
             address = "http://vault.vault.svc:8200"
+            vault_agent_token_file = "/vault/secrets/token"
             renew_token = true
           }
-
+          
           secret {
             path = "kv/data/secret/prod/PLASTICYCLE"
             format = "env"
