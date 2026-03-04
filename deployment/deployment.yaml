@@ -15,7 +15,7 @@ spec:
         vault.hashicorp.com/agent-inject: "true"
         vault.hashicorp.com/role: "prod"
         vault.hashicorp.com/auth-path: "auth/kubernetes-cluster-demo"
-      
+
         # Inject file envconsul.hcl
         vault.hashicorp.com/agent-inject-secret-envconsul.hcl: "kv/secret/prod/PLASTICYCLE"
         vault.hashicorp.com/agent-inject-template-envconsul.hcl: |
@@ -23,10 +23,10 @@ spec:
             address = "http://vault.vault.svc:8200"
             renew_token = true
           }
-      
+
           secret {
             path = "kv/data/secret/prod/PLASTICYCLE"
-            format = "env"
+            no_prefix = true
           }
     spec:
       serviceAccountName: vault-auth
