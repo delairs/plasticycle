@@ -10,7 +10,6 @@ COPY . .
 RUN apk add --no-cache curl unzip
 
 # install envconsul (amd64)
-RUN curl -fsSL -o /tmp/envconsul.zip
 RUN wget https://releases.hashicorp.com/envconsul/0.13.4/envconsul_0.13.4_linux_386.zip
 RUN unzip envconsul_0.13.4_linux_386.zip 
 
