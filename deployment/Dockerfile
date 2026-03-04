@@ -2,7 +2,7 @@ FROM node:20-alpine
 
 WORKDIR /app
 COPY package*.json ./
-RUN npm install
+RUN npm ci
 
 COPY . .
 
@@ -18,6 +18,8 @@ RUN curl -fsSL -o /tmp/envconsul.zip \
 
 COPY run.sh /app/run.sh
 RUN chmod +x /app/run.sh
+
+RUN npm run build
 
 EXPOSE 5173
 CMD ["/app/run.sh"]
