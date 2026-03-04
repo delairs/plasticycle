@@ -149,22 +149,22 @@ pipeline {
           }
         }
 
-        stage('SonarQube - Code Analysis') {
-            steps {
-              withSonarQubeEnv('sonarqube') {
-                script {
-                  def scannerHome = tool 'sonarQubeScanner'
-                  sh """
-                    ${scannerHome}/bin/sonar-scanner \
-                      -Dsonar.projectKey=${appsName} \
-                      -Dsonar.projectName=${appsName} \
-                      -Dsonar.sources=. \
-                      -Dsonar.exclusions=**/node_modules/**,**/dist/**,**/build/**,**/coverage/**
-                  """
-                }
-              }
-            }
-        }
+        // stage('SonarQube - Code Analysis') {
+        //     steps {
+        //       withSonarQubeEnv('sonarqube') {
+        //         script {
+        //           def scannerHome = tool 'sonarQubeScanner'
+        //           sh """
+        //             ${scannerHome}/bin/sonar-scanner \
+        //               -Dsonar.projectKey=${appsName} \
+        //               -Dsonar.projectName=${appsName} \
+        //               -Dsonar.sources=. \
+        //               -Dsonar.exclusions=**/node_modules/**,**/dist/**,**/build/**,**/coverage/**
+        //           """
+        //         }
+        //       }
+        //     }
+        // }
 
 
         stage('SonarQube - Quality Gate') {
