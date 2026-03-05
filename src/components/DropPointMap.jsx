@@ -9,6 +9,7 @@ const DropPointMap = () => {
   // Ambil dari .env (Vite wajib prefix VITE_)
   const BASE_URL = process.env.VITE_OPENLITTERMAP_BASE_URL;
   const COUNTRY_CODE = process.env.VITE_COUNTRY_CODE;
+  const TILE_URL = process.env.VITE_MAP_TILE_URL;
 
   useEffect(() => {
     const fetchDropPoints = async () => {
@@ -53,7 +54,7 @@ const DropPointMap = () => {
       <MapContainer center={[-2.5, 118]} zoom={4.5} style={{ height: '100%', width: '100%' }}>
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          url={TILE_URL}
         />
         {dropPoints.map((point) => (
           <Marker key={point.id} position={[point.lat, point.lng]} icon={markerIcon}>
