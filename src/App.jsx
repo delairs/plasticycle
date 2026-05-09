@@ -9,8 +9,10 @@
 //    Example installs: `npm i leaflet react-leaflet chart.js axios`
 // 5) Deploy to Vercel: push repo to GitHub and connect to Vercel (or run `vercel` CLI).
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import DropPointSection from './components/DropPointSection';
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
 
 // Simple sample data: articles and tips
 const SAMPLE_ARTICLES = [
@@ -217,31 +219,52 @@ const SAMPLE_TIPS = [
 export default function PlastiCycleApp() {
   const [query, setQuery] = useState('');
   const [selectedArticle, setSelectedArticle] = useState(null);
+  const [dbStatus, setDbStatus] = useState(null);
+  const [plasticItems, setPlasticItems] = useState([]);
+  const [dbLoading, setDbLoading] = useState(false);
+  const [dbError, setDbError] = useState('');
+
+  async function loadDatabaseData() {
+    try {
+      setDbLoading(true);
+      setDbError('');
+
+      const [dbCheckResponse, plasticItemsResponse] = await Promise.all([
+        fetch(`${API_BASE_URL}/api/db-check`),
+        fetch(`${API_BASE_URL}/api/plastic-items`)
+      ]);
+
+      if (!dbCheckResponse.ok) {
+        throw new Error('Gagal cek koneksi database');
+      }
+
+      if (!plasticItemsResponse.ok) {
+        throw new Error('Gagal mengambil data plastic items');
+      }
+
+      const dbCheckData = await dbCheckResponse.json();
+      const plasticItemsData = await plasticItemsResponse.json();
+
+      setDbStatus(dbCheckData);
+      setPlasticItems(plasticItemsData.data || []);
+    } catch (error) {
+      console.error(error);
+      setDbError(error.message || 'Terjadi error saat mengambil data dari backend');
+    } finally {
+      setDbLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    loadDatabaseData();
+  }, []);
 
   const filtered = SAMPLE_ARTICLES.filter(
     (a) => a.title.toLowerCase().includes(query.toLowerCase()) || a.excerpt.toLowerCase().includes(query.toLowerCase())
   );
 
-  const BASE_URL = process.env.VITE_OPENLITTERMAP_BASE_URL;
-  const COUNTRY_CODE = process.env.VITE_COUNTRY_CODE;
-  console.log("ENV DEBUG:", process.env);
-
-  const VAULT_FLAG = import.meta.env.VITE_DEMO_FLAG;
-
-  console.log("Vault flag:", VAULT_FLAG);
-
   return (
     <div className="min-h-screen bg-gradient-to-b from-green-50 to-white text-gray-800">
-      <div className="bg-yellow-200 p-3">
-        <h2>Vault Test</h2>
-        <p>{VAULT_FLAG}</p>
-      </div>
-
-      <div className="p-4 bg-yellow-100 rounded mb-4">
-        <h3 className="font-semibold">Vault Env Debug</h3>
-        <p>Base URL: {BASE_URL || "NOT FOUND"}</p>
-        <p>Country Code: {COUNTRY_CODE || "NOT FOUND"}</p>
-      </div>
       {/* Header */}
       <header className="bg-white/80 backdrop-blur sticky top-0 z-40 shadow-sm">
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
@@ -261,6 +284,7 @@ export default function PlastiCycleApp() {
           <nav className="hidden md:flex gap-4 items-center">
             <a href="#home" className="hover:underline">Home</a>
             <a href="#articles" className="hover:underline">Artikel</a>
+            <a href="#database" className="hover:underline">Database</a>
             <a href="#tools" className="hover:underline">Aplikasi & Tools</a>
             <a href="#tips" className="hover:underline">Tips</a>
             <a href="#community" className="hover:underline">Komunitas</a>
@@ -364,6 +388,75 @@ export default function PlastiCycleApp() {
             </div>
           )}
 
+        </section>
+
+        {/* Data dari Database */}
+        <section id="database" className="bg-white p-6 rounded-lg shadow">
+          <div className="flex items-center justify-between gap-4">
+            <div>
+              <h3 className="text-2xl font-semibold">Data dari Database</h3>
+              <p className="mt-2 text-gray-600">
+                Data ini diambil dari backend Node.js yang terkoneksi ke PostgreSQL menggunakan dynamic secret dari Vault.
+              </p>
+            </div>
+
+            <button
+              type="button"
+              onClick={loadDatabaseData}
+              className="bg-green-600 text-white px-4 py-2 rounded-md"
+            >
+              Refresh
+            </button>
+          </div>
+
+          <div className="mt-4">
+            {dbLoading && (
+              <div className="p-4 rounded-lg bg-green-50 text-green-700">
+                Mengambil data dari backend...
+              </div>
+            )}
+
+            {dbError && (
+              <div className="p-4 rounded-lg bg-red-50 text-red-700">
+                {dbError}
+              </div>
+            )}
+
+            {dbStatus && !dbError && (
+              <div className="p-4 rounded-lg bg-gray-50 border">
+                <div className="font-semibold">Status koneksi database:</div>
+                <div className="mt-2 text-sm text-gray-700">
+                  Status: <strong>{dbStatus.status}</strong>
+                </div>
+                <div className="text-sm text-gray-700">
+                  DB User: <strong>{dbStatus.databaseUser}</strong>
+                </div>
+                <div className="text-sm text-gray-700">
+                  DB Time: <strong>{dbStatus.databaseTime}</strong>
+                </div>
+              </div>
+            )}
+          </div>
+            
+          <div className="mt-6 grid md:grid-cols-2 gap-4">
+            {plasticItems.map((item) => (
+              <div key={item.id} className="p-4 rounded-lg border bg-white">
+                <h4 className="font-semibold">{item.name}</h4>
+                <p className="text-sm text-gray-600 mt-1">
+                  Kategori: {item.category}
+                </p>
+                <p className="text-xs text-gray-400 mt-2">
+                  Dibuat: {new Date(item.created_at).toLocaleString('id-ID')}
+                </p>
+              </div>
+            ))}
+          </div>
+            
+          {!dbLoading && !dbError && plasticItems.length === 0 && (
+            <div className="mt-4 p-4 rounded-lg bg-gray-50 text-gray-600">
+              Belum ada data plastic items dari database.
+            </div>
+          )}
         </section>
 
         {/* Tools */}
