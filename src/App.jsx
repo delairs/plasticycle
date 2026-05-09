@@ -229,11 +229,15 @@ export default function PlastiCycleApp() {
     const rawBody = await response.text();
   
     if (!response.ok) {
-      throw new Error(`Request gagal: ${response.status} ${response.statusText}. Body: ${rawBody.slice(0, 120)}`);
+      throw new Error(
+        `Request gagal: ${response.status} ${response.statusText}. Body: ${rawBody.slice(0, 120)}`
+      );
     }
   
     if (!contentType.includes('application/json')) {
-      throw new Error(`Response bukan JSON dari ${path}. Body awal: ${rawBody.slice(0, 120)}`);
+      throw new Error(
+        `Response bukan JSON dari ${path}. Body awal: ${rawBody.slice(0, 120)}`
+      );
     }
   
     return JSON.parse(rawBody);
