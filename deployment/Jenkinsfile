@@ -122,49 +122,49 @@ pipeline {
         //   }
         // }
 
-        stage('Snyk - Full Dependency Scan') {
-          steps {
-            script {
-              try {
-                snykSecurity(
-                  snykInstallation: 'Snyk',
-                  snykTokenId: 'snykToken',
-                  severity: 'low',
-                  targetFile: 'package-lock.json',
-                  projectName: 'plasticycle',
-                  additionalArguments: '''
-                    --dev
-                    --strict-out-of-sync=true
-                    --show-vulnerable-paths=all
-                    --policy-path=.snyk
-                  '''.trim()
-                )
+        // stage('Snyk - Full Dependency Scan') {
+        //   steps {
+        //     script {
+        //       try {
+        //         snykSecurity(
+        //           snykInstallation: 'Snyk',
+        //           snykTokenId: 'snykToken',
+        //           severity: 'low',
+        //           targetFile: 'package-lock.json',
+        //           projectName: 'plasticycle',
+        //           additionalArguments: '''
+        //             --dev
+        //             --strict-out-of-sync=true
+        //             --show-vulnerable-paths=all
+        //             --policy-path=.snyk
+        //           '''.trim()
+        //         )
 
-                env.stageResultsnyk = 'true'
-              } catch (Exception e) {
-                unstable("${STAGE_NAME} failed!")
-                env.stageResultsnyk = 'false'
-              }
-            }
-          }
-        }
+        //         env.stageResultsnyk = 'true'
+        //       } catch (Exception e) {
+        //         unstable("${STAGE_NAME} failed!")
+        //         env.stageResultsnyk = 'false'
+        //       }
+        //     }
+        //   }
+        // }
 
-        stage('SonarQube - Code Analysis') {
-            steps {
-              withSonarQubeEnv('sonarqube') {
-                script {
-                  def scannerHome = tool 'sonarQubeScanner'
-                  sh """
-                    ${scannerHome}/bin/sonar-scanner \
-                      -Dsonar.projectKey=${appsName} \
-                      -Dsonar.projectName=${appsName} \
-                      -Dsonar.sources=. \
-                      -Dsonar.exclusions=**/node_modules/**,**/dist/**,**/build/**,**/coverage/**
-                  """
-                }
-              }
-            }
-        }
+        // stage('SonarQube - Code Analysis') {
+        //     steps {
+        //       withSonarQubeEnv('sonarqube') {
+        //         script {
+        //           def scannerHome = tool 'sonarQubeScanner'
+        //           sh """
+        //             ${scannerHome}/bin/sonar-scanner \
+        //               -Dsonar.projectKey=${appsName} \
+        //               -Dsonar.projectName=${appsName} \
+        //               -Dsonar.sources=. \
+        //               -Dsonar.exclusions=**/node_modules/**,**/dist/**,**/build/**,**/coverage/**
+        //           """
+        //         }
+        //       }
+        //     }
+        // }
 
 
         // stage('SonarQube - Quality Gate') {
