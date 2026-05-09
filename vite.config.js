@@ -1,10 +1,20 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
 
-// https://vite.dev/config/
+const backendUrl =
+  process.env.BACKEND_URL ||
+  'http://plasticycle-backend.prod.svc.cluster.local:3000';
+
 export default defineConfig({
   plugins: [react()],
-  define: {
-    'process.env': process.env
+  server: {
+    host: '0.0.0.0',
+    port: 5173,
+    proxy: {
+      '/api': {
+        target: backendUrl,
+        changeOrigin: true
+      }
+    }
   }
-})
+});

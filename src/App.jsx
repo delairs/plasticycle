@@ -12,8 +12,6 @@
 import React, { useEffect, useState } from 'react';
 import DropPointSection from './components/DropPointSection';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
-console.log('API_BASE_URL:', API_BASE_URL);
 
 // Simple sample data: articles and tips
 const SAMPLE_ARTICLES = [
@@ -226,9 +224,7 @@ export default function PlastiCycleApp() {
   const [dbError, setDbError] = useState('');
 
   async function fetchJson(path) {
-    const url = `${API_BASE_URL}${path}`;
-  
-    const response = await fetch(url);
+    const response = await fetch(path);
     const contentType = response.headers.get('content-type') || '';
     const rawBody = await response.text();
   
@@ -237,7 +233,7 @@ export default function PlastiCycleApp() {
     }
   
     if (!contentType.includes('application/json')) {
-      throw new Error(`Response bukan JSON dari ${url}. Body awal: ${rawBody.slice(0, 120)}`);
+      throw new Error(`Response bukan JSON dari ${path}. Body awal: ${rawBody.slice(0, 120)}`);
     }
   
     return JSON.parse(rawBody);
