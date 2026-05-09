@@ -3,12 +3,14 @@ import L from 'leaflet';
 import axios from 'axios';
 import { useEffect, useMemo, useState } from 'react';
 
+const BASE_URL =
+  import.meta.env.VITE_OPENLITTERMAP_BASE_URL || 'https://api.openlittermap.com';
+
+const COUNTRY_CODE =
+  import.meta.env.VITE_COUNTRY_CODE || 'ID';
+
 const DropPointMap = () => {
   const [dropPoints, setDropPoints] = useState([]);
-
-  // Ambil dari .env (Vite wajib prefix VITE_)
-  const BASE_URL = process.env.VITE_OPENLITTERMAP_BASE_URL;
-  const COUNTRY_CODE = process.env.VITE_COUNTRY_CODE;
 
   useEffect(() => {
     const fetchDropPoints = async () => {
@@ -25,7 +27,6 @@ const DropPointMap = () => {
             lng: f.geometry?.coordinates?.[0],
             desc: f.properties?.material || 'Data dari OpenLitterMap',
           }))
-          // penting: jangan pakai `p.lat && p.lng` karena 0 dianggap false
           .filter((p) => Number.isFinite(p.lat) && Number.isFinite(p.lng));
 
         setDropPoints(points);
@@ -35,9 +36,8 @@ const DropPointMap = () => {
     };
 
     fetchDropPoints();
-  }, [BASE_URL, COUNTRY_CODE]);
+  }, []);
 
-  // Supaya icon gak dibuat ulang tiap render
   const markerIcon = useMemo(
     () =>
       new L.Icon({
