@@ -13,6 +13,7 @@ import React, { useEffect, useState } from 'react';
 import DropPointSection from './components/DropPointSection';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
+console.log('API_BASE_URL:', API_BASE_URL);
 
 // Simple sample data: articles and tips
 const SAMPLE_ARTICLES = [
@@ -224,27 +225,34 @@ export default function PlastiCycleApp() {
   const [dbLoading, setDbLoading] = useState(false);
   const [dbError, setDbError] = useState('');
 
+  async function fetchJson(path) {
+    const url = `${API_BASE_URL}${path}`;
+  
+    const response = await fetch(url);
+    const contentType = response.headers.get('content-type') || '';
+    const rawBody = await response.text();
+  
+    if (!response.ok) {
+      throw new Error(`Request gagal: ${response.status} ${response.statusText}. Body: ${rawBody.slice(0, 120)}`);
+    }
+  
+    if (!contentType.includes('application/json')) {
+      throw new Error(`Response bukan JSON dari ${url}. Body awal: ${rawBody.slice(0, 120)}`);
+    }
+  
+    return JSON.parse(rawBody);
+  }
+  
   async function loadDatabaseData() {
     try {
       setDbLoading(true);
       setDbError('');
-
-      const [dbCheckResponse, plasticItemsResponse] = await Promise.all([
-        fetch(`${API_BASE_URL}/api/db-check`),
-        fetch(`${API_BASE_URL}/api/plastic-items`)
+  
+      const [dbCheckData, plasticItemsData] = await Promise.all([
+        fetchJson('/api/db-check'),
+        fetchJson('/api/plastic-items')
       ]);
-
-      if (!dbCheckResponse.ok) {
-        throw new Error('Gagal cek koneksi database');
-      }
-
-      if (!plasticItemsResponse.ok) {
-        throw new Error('Gagal mengambil data plastic items');
-      }
-
-      const dbCheckData = await dbCheckResponse.json();
-      const plasticItemsData = await plasticItemsResponse.json();
-
+  
       setDbStatus(dbCheckData);
       setPlasticItems(plasticItemsData.data || []);
     } catch (error) {
