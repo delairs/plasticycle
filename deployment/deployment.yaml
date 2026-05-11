@@ -28,7 +28,6 @@ spec:
 
           secret {
             path = "kv/data/secret/prod/PLASTICYCLE"
-            format = "env"
             no_prefix = true
           }
     spec:
